@@ -23,36 +23,22 @@ function runEnter() {
   // Print the value to the console
   console.log(inputValue);
 
+  // filter data to show the data only for particular date from the input
   var testdata = tableData.filter(x => x.datetime === inputValue );
-  filltable(testdata, ['datetime', 'city', 'state', 'country', 'shape', 'durationMinutes', 'comments' ]);
-
-}
-
-// function to fill existing table with with data
-function filltable(data, columns) {
-
-  //select table body to work with
+  
+// get table body html element
   var tbody = d3.select("#ufo_table_body")
-  // if there are rows already in a table, clear them
+
+// clear table if there are rows there already
   var rows1 = tbody.selectAll('tr');
   rows1.remove();
+// fill table with rows from filtered data
+  testdata.forEach((ufoSight) => {
+    var row = tbody.append("tr");
+    Object.entries(ufoSight).forEach(([key, value]) => {
+      var cell = row.append("td");
+      cell.text(value);
+    });
+  });
 
-  // create rows 
-  var rows = tbody.selectAll('tr')
-    .data(data)
-    .enter()
-    .append('tr');
-
-  // create cells in each row
-  var cells = rows.selectAll('td')
-    .data(function (row) {
-      return columns.map(function (column) {
-        return {column: column, value: row[column]};
-      });
-    })
-    .enter()
-    .append('td')
-      .text(function (d) { return d.value; });
-
-return tbody;
 }
